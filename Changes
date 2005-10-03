@@ -1,0 +1,6 @@
+Revision history for Perl extension CGI::Application::Plugin::FormValidator::Simple.
+
+0.01  Mon Oct  3 15:34:40 2005
+	- original version; created by h2xs 1.23 with options
+		-X -A CGI::Application::Plugin::FormValidator::Simple
+
