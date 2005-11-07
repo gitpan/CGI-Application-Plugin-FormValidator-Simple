@@ -14,7 +14,7 @@ require Exporter;
 );
 sub import { goto &Exporter::import }
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 sub validator {
     my $self = shift;
@@ -34,6 +34,7 @@ sub form {
     my $self = shift;
     if ($_[0]) {
         my $form = $_[1] ? [@_] : $_[0];
+	$self->validator() unless $self->{validator};
         $self->{form} = $self->{validator}->check($self->query, $form);
     }
     return $self->{form};
@@ -70,7 +71,6 @@ CGI::Application::Plugin::FormValidator::Simple - Validator for CGI::Application
     print $self->form->valid('param1');
 
     if ( some condition... ) {
-
         $self->form(
             other_param => [qw/NOT_INT/],
         );
