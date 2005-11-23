@@ -4,7 +4,6 @@ use strict;
 use vars qw($VERSION @EXPORT);
 use warnings;
 use FormValidator::Simple;
-use CGI::Application;
 
 require Exporter;
 
@@ -14,7 +13,7 @@ require Exporter;
 );
 sub import { goto &Exporter::import }
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 sub validator {
     my $self = shift;
@@ -25,7 +24,11 @@ sub validator {
 
     my $options = $params{options};
     $self->{validator} = FormValidator::Simple->new(%$options);
-
+    
+    if (exists $params{messages}){
+	FormValidator::Simple->set_messages($params{messages});
+      }
+    
     return $self->{validator};
 }
 
@@ -43,7 +46,6 @@ sub form {
 
 1;
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
@@ -57,7 +59,24 @@ CGI::Application::Plugin::FormValidator::Simple - Validator for CGI::Application
         plugins => [ 'Japanese', 'Number::Phone::JP' ],
         options => {
             charset => 'euc',
-        }
+        },
+        messages => {
+            user => {
+                param1 => {
+                    NOT_BLANK => 'Input name!',
+                    ASCII     => 'Input name with ascii code!',
+                },
+                mail1 => {
+                    DEFAULT   => 'email is wrong.!',
+                    NOT_BLANK => 'input email.!'
+                },
+            },
+            company => {
+                param1 => {
+                    NOT_BLANK => 'Input name!',
+                },
+            },
+        },
     );
 
     $self->form(
@@ -77,7 +96,6 @@ CGI::Application::Plugin::FormValidator::Simple - Validator for CGI::Application
     }
 
     if ( $self->form->has_missing || $self->form->has_invalid ) {
-            
         if ( $self->form->missing('param1') ) {
             ...
         }
@@ -100,6 +118,8 @@ See L<FormValidator::Simple> for more information.
 =head1 SEE ALSO
 
 L<FormValidator::Simple>
+
+L<Catalyst::Plugin::FormValidator::Simple>
 
 L<CGI::Application>
 
